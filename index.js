@@ -31,7 +31,7 @@ async function run(){
 
         app.post('/addtodo',async(req,res)=>{
             const user = req.body;
-           
+
             const result = await userCollection.insertOne(user)
             res.send(result)
         })
@@ -41,7 +41,7 @@ async function run(){
             const query= {_id: ObjectId(id)};
             const result = await userCollection.deleteOne(query)
             res.send(result)
-           
+
         })
         app.put('/complete/:id', async(req,res)=>{
             const id = req.params.id;
@@ -53,17 +53,32 @@ async function run(){
             const newData = {
                 $set: {
                     completed: true
-                    
-                  }
 
-                
+                  }
             }
             const result = userCollection.updateOne(query,newData,option)
             res.send(result)
-           
+
+        })
+        app.put('/updated/:id', async(req,res)=>{
+            const id = req.params.id;
+            const text = req.body.todo
+          console.log(id)
+            const query= {_id: ObjectId(id)};
+            const option = {
+                upsert:true
+            }
+            const newData = {
+                $set: {
+                    todo: text
+                  }
+            }
+            const result = userCollection.updateOne(query,newData,option)
+            res.send(result)
+
         })
 
-        
+
     }
     finally{
 
@@ -72,8 +87,8 @@ async function run(){
 run().catch(err=>console.log(err))
 
 app.get('/',(req,res)=>{
-    res.send('hefhroiawjcfiaj');
+    res.send('running');
 })
 app.listen(port, ()=>{
-    console.log(`lisenrgnjkhsi ${port}`)
+    console.log(`Running on port ${port}`)
 })
